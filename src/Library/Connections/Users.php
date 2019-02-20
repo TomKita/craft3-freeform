@@ -70,7 +70,7 @@ class Users extends AbstractConnection
 
         if ($element->status === User::STATUS_PENDING) {
             try {
-                \Craft::$app->getUsers()->sendActivationEmail($element);
+                // \Craft::$app->getUsers()->sendActivationEmail($element);
             } catch (\Throwable $e) {
                 \Craft::$app->getErrorHandler()->logException($e);
                 \Craft::$app->getSession()->setError(\Craft::t('app', 'User saved, but couldn’t send verification email. Check your email settings.'));
