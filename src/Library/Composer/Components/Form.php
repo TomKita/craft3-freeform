@@ -4,7 +4,7 @@
  *
  * @package       Solspace: Freeform
  * @author        Solspace, Inc.
- * @copyright     Copyright (c) 2008-2018, Solspace, Inc.
+ * @copyright     Copyright (c) 2008-2019, Solspace, Inc.
  * @link          https:   //solspace.com/craft/freeform
  * @license       https:   //solspace.com/software/license-agreement
  */
@@ -822,6 +822,14 @@ class Form implements \JsonSerializable, \Iterator, \ArrayAccess, Arrayable
     public function getFileUploadHandler(): FileUploadHandlerInterface
     {
         return $this->fileUploadHandler;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTagAttributes(): array
+    {
+        return $this->tagAttributes ?? [];
     }
 
     /**

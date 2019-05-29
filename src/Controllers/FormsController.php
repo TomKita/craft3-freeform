@@ -4,7 +4,7 @@
  *
  * @package       Solspace:Freeform
  * @author        Solspace, Inc.
- * @copyright     Copyright (c) 2008-2017, Solspace, Inc.
+ * @copyright     Copyright (c) 2008-2019, Solspace, Inc.
  * @link          https://solspace.com/craft/freeform
  * @license       https://solspace.com/software/license-agreement
  */
@@ -357,7 +357,7 @@ class FormsController extends BaseController
             'canManageNotifications'   => PermissionHelper::checkPermission(Freeform::PERMISSION_NOTIFICATIONS_MANAGE),
             'canManageSettings'        => PermissionHelper::checkPermission(Freeform::PERMISSION_SETTINGS_ACCESS),
             'isDbEmailTemplateStorage' => $this->getSettingsService()->isDbEmailTemplateStorage(),
-            'isWidgetsInstalled'       => Freeform::getInstance()->isPro(),
+            'isWidgetsInstalled'       => true,
             'isRulesEnabled'           => Freeform::getInstance()->isPro(),
             'isRecaptchaEnabled'       => Freeform::getInstance()->isPro() && $settings->recaptchaEnabled,
             'isPaymentEnabled'         => \Craft::$app->plugins->isPluginEnabled('freeform-payments'),

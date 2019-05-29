@@ -4,7 +4,7 @@
  *
  * @package       Solspace:Freeform
  * @author        Solspace, Inc.
- * @copyright     Copyright (c) 2008-2017, Solspace, Inc.
+ * @copyright     Copyright (c) 2008-2019, Solspace, Inc.
  * @link          https://solspace.com/craft/freeform
  * @license       https://solspace.com/software/license-agreement
  */
@@ -13,6 +13,7 @@ namespace Solspace\Freeform\Controllers;
 
 use Carbon\Carbon;
 use craft\db\Query;
+use craft\db\Table;
 use craft\elements\db\ElementQueryInterface;
 use craft\helpers\ChartHelper;
 use craft\helpers\FileHelper;
@@ -84,6 +85,11 @@ class ApiController extends BaseController
                         ]
                     );
 
+                    if ($submission === false) {
+                        $submission = null;
+                    }
+
+                    $returnUrl = Freeform::getInstance()->forms->onAfterGenerateReturnUrl($form, $submission, $returnUrl);
                     if (!$returnUrl) {
                         $returnUrl = \Craft::$app->request->getUrl();
                     }
@@ -460,16 +466,26 @@ class ApiController extends BaseController
 
         $intervalUnit = ChartHelper::getRunChartIntervalUnit($startDate, $endDate);
 
+        $submissions = Submission::TABLE;
+
         // Prep the query
         $query = (new Query())
-            ->select(['COUNT(*) as [[value]]'])
-            ->from([Submission::TABLE . ' ' . Submission::TABLE_STD]);
+            ->select(["COUNT($submissions.[[id]]) as [[value]]"])
+            ->from($submissions);
+
+        if (version_compare(\Craft::$app->getVersion(), '3.1', '>=')) {
+            $elements = Table::ELEMENTS;
+            $query->innerJoin(
+                $elements,
+                "$elements.[[id]] = $submissions.[[id]] AND $elements.[[dateDeleted]] IS NULL"
+            );
+        }
 
         if ($formId) {
-            $query->andWhere(['formId' => $formId]);
+            $query->andWhere(["$submissions.[[formId]]" => $formId]);
         }
         if ($isSpam !== null) {
-            $query->andWhere(['isSpam' => $isSpam]);
+            $query->andWhere(["$submissions.[[isSpam]]" => $isSpam]);
         }
 
         // Get the chart data table
@@ -477,7 +493,7 @@ class ApiController extends BaseController
             $query,
             $startDate,
             $endDate,
-            Submission::TABLE_STD . '.dateCreated',
+            "$submissions.[[dateCreated]]",
             [
                 'intervalUnit' => $intervalUnit,
                 'valueLabel'   => Freeform::t('Submissions'),
@@ -585,7 +601,7 @@ class ApiController extends BaseController
             $daySql        = "DAY({$dateColumnSql})";
             $hourSql       = "HOUR({$dateColumnSql})";
         } else {
-            $dateColumnSql = "[[{$dateColumn}]]";
+            $dateColumnSql = "{$dateColumn}";
             $yearSql       = "EXTRACT(YEAR FROM {$dateColumnSql})";
             $monthSql      = "EXTRACT(MONTH FROM {$dateColumnSql})";
             $daySql        = "EXTRACT(DAY FROM {$dateColumnSql})";

@@ -4,7 +4,7 @@
  *
  * @package       Solspace:Freeform
  * @author        Solspace, Inc.
- * @copyright     Copyright (c) 2008-2017, Solspace, Inc.
+ * @copyright     Copyright (c) 2008-2019, Solspace, Inc.
  * @link          https://solspace.com/craft/freeform
  * @license       https://solspace.com/software/license-agreement
  */
@@ -291,7 +291,7 @@ class Settings extends Model
     public function listTemplatesInFormTemplateDirectory()
     {
         $templateDirectoryPath = $this->getAbsoluteFormTemplateDirectory();
-        if (!file_exists($templateDirectoryPath)) {
+        if ($templateDirectoryPath === '/' || !file_exists($templateDirectoryPath)) {
             return [];
         }
 
@@ -314,15 +314,20 @@ class Settings extends Model
     public function listTemplatesInEmailTemplateDirectory()
     {
         $templateDirectoryPath = $this->getAbsoluteEmailTemplateDirectory();
-        if (!file_exists($templateDirectoryPath)) {
+        if ($templateDirectoryPath === '/' || !file_exists($templateDirectoryPath)) {
             return [];
         }
 
         $fs = new Finder();
-        /** @var SplFileInfo[] $fileIterator */
-        $fileIterator = $fs->files()->in($templateDirectoryPath)->name('*.html')->name('*.twig');
-        $files        = [];
 
+        /** @var SplFileInfo[] $fileIterator */
+        $fileIterator = $fs
+            ->in($templateDirectoryPath)
+            ->name('*.html')
+            ->name('*.twig')
+            ->files();
+
+        $files = [];
         foreach ($fileIterator as $file) {
             $path         = $file->getRealPath();
             $files[$path] = pathinfo($path, PATHINFO_BASENAME);

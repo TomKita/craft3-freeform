@@ -1,5 +1,105 @@
 # Solspace Freeform Changelog
 
+## 2.5.24 - 2019-05-16
+### Changed
+- Updated plugin icon.
+
+### Fixed
+- Fixed a bug where entering the root template directory for directory path for Formatting Templates and Email Notifications settings would result in an error.
+- Fixed some CSS issues in CP submission detail views.
+
+## 2.5.23 - 2019-05-07
+### Changed
+- Updated Flatpickr library (for Freeform date picker on Date fields) to v4.5.7, which resolves some issues.
+- Updated Pro edition to prepare for future official Editions support in Freeform.
+
+## 2.5.22 - 2019-04-30
+### Fixed
+- Fixed a bug where the `allowAdminChanges` Project Config setting fix was causing errors for Craft 3.0.x users.
+
+## 2.5.21 - 2019-04-27
+### Fixed
+- Fixed a bug where Settings area in CP was still visible when the `allowAdminChanges` setting is disabled for Project Config.
+- Reverted the Hidden fields order in CP Submission view change from v2.5.19 due to other side effects occurring from it.
+
+## 2.5.20 - 2019-04-25
+### Fixed
+- Fixed a bug where the return URL could trigger an error in some cases.
+
+## 2.5.19 - 2019-04-23
+### Added
+- Added Insightly CRM Lead integration for Freeform Pro edition.
+
+### Changed
+- Updated Hidden fields to be in their original field position (instead of first in form) when viewing submissions in the CP.
+- Updated Date field picker and format getters to be public.
+
+### Fixed
+- Fixed a bug where Form Color setting for forms was only visible in Pro edition.
+- Fixed a bug where using `DD/MM/YYYY` formatting and Min/Max date setting on Date fields would result in an error upon submit when validating.
+- Fixed a bug where the Resend Notifications feature errored when email notifications extended layouts.
+- Fixed a bug where permanently deleting fields could cause an error if assigned to an integration field list.
+
+## 2.5.18 - 2019-04-18
+### Added
+- Added Active Campaign mailing list API integration (Pro edition).
+- Added `EVENT_AFTER_GENERATE_RETURN_URL` developer event, allowing modifying of the return URL of forms.
+
+### Changed
+- Updated the HubSpot integration to not create blank Deals if no Freeform data is mapped to Deal fields.
+- Updated the HubSpot integration to include an IP Address mapping setting, allowing you to map IP addresses to a custom field in Contacts.
+
+## 2.5.17 - 2019-04-08
+### Added
+- Added a `getTagAttributes()` function to the Form component.
+
+### Fixed
+- Fixed a bug where loading more than 1 form in a page with reCAPTCHA would trigger JS errors.
+- Fixed a bug where Users element connection was not always displaying all available fields for mapping for some User groups.
+- Fixed a bug where the `renderSingleInput()` method would not work with any directly applied custom attributes, etc.
+
+## 2.5.16 - 2019-03-28
+### Fixed
+- Fixed a bug where multi-page tabs would not allow you to re-arrange them in CP.
+- Fixed a bug where user/group permissions for Settings didn't give access to create/edit API integrations and statuses.
+- Fixed a bug where trying to load mailing lists for API integration would error when using PostgreSQL.
+
+## 2.5.15 - 2019-03-25
+### Changed
+- Updated Flash success message to return 'Form submitted successfully' instead of `true`.
+- Updated Dutch NL translation.
+
+### Fixed
+- Fixed a bug where email notification values were not always being escaped.
+- Fixed a bug where API integration values for multi-option fields were being sent as option labels instead of option values.
+- Fixed a bug where underscores in email notification templates were not rendering correctly.
+- Fixed a bug where filtering submissions in CP by status was not working and returning an error.
+- Fixed a bug where the CP Submissions chart could error when using PostgreSQL.
+- Fixed a bug where Freeform has unused class that caused the Craft Webhooks plugin to fail.
+
+## 2.5.14 - 2019-03-13
+### Fixed
+- Fixed a bug where using the User element connection with the Password field on a page other than the last page of multi-page forms would have the mapping fail.
+- Fixed a bug where updating a mailing list integration's handle would cause it to duplicate instead.
+
+## 2.5.13 - 2019-02-26
+### Changed
+- Updated Salesforce integrations to send over field data as strings (instead of integer) when mapping to a Salesforce Phone field type.
+
+### Fixed
+- Fixed a bug where the Submissions CP index page would error for some customers.
+- Fixed a bug where submissions were not able to be restored (from soft delete) in Craft 3.1+.
+
+## 2.5.12 - 2019-02-21
+### Added
+- Added getters for all form field attributes.
+
+### Fixed
+- Fixed a bug where soft deletes were not correctly affecting visual counts and stats in Freeform CP in Craft 3.1+.
+- Fixed a bug where a migration was not working correctly in Craft 3.1+.
+- Fixed a bug where User Registration forms would error if an optional User Photo field was setup and mapped and the user submitted without a photo.
+- Fixed a bug where saving email notifications in the control panel would error in PHP 7.3. Updated the Markdownify dependency.
+
 ## 2.5.11 - 2019-01-30
 ### Fixed
 - Fixed a bug where manually specifying field options (such as `fieldName.label`) in email notification templates were not working.

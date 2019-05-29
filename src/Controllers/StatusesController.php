@@ -4,7 +4,7 @@
  *
  * @package       Solspace:Freeform
  * @author        Solspace, Inc.
- * @copyright     Copyright (c) 2008-2017, Solspace, Inc.
+ * @copyright     Copyright (c) 2008-2019, Solspace, Inc.
  * @link          https://solspace.com/craft/freeform
  * @license       https://solspace.com/software/license-agreement
  */
@@ -41,7 +41,7 @@ class StatusesController extends BaseController
      */
     public function actionCreate(): Response
     {
-        PermissionHelper::requirePermission(Freeform::PERMISSION_FIELDS_MANAGE);
+        PermissionHelper::requirePermission(Freeform::PERMISSION_SETTINGS_ACCESS);
 
         $model = StatusModel::create();
 

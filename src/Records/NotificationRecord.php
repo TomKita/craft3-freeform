@@ -4,7 +4,7 @@
  *
  * @package       Solspace:Freeform
  * @author        Solspace, Inc.
- * @copyright     Copyright (c) 2008-2017, Solspace, Inc.
+ * @copyright     Copyright (c) 2008-2019, Solspace, Inc.
  * @link          https://solspace.com/craft/freeform
  * @license       https://solspace.com/software/license-agreement
  */
@@ -53,10 +53,10 @@ class NotificationRecord extends ActiveRecord implements NotificationInterface, 
         $record->fromName  = \Craft::$app->systemSettings->getSetting('email', 'fromName');
         $record->subject   = 'New submission from {{ form.name }}';
         $record->bodyHtml  = <<<EOT
-<p>Submitted on: {{ dateCreated|date('Y-m-d H:i:s') }}</p>
+<p>Submitted on: {{ dateCreated|date('l, F j, Y \\\\a\\\\t g:ia') }}</p>
 <ul>
 {% for field in allFields %}
-    <li>{{ field.label }}: {{ field.getValueAsString() }}</li>
+    <li>{{ field.label }}: {{ field.valueAsString }}</li>
 {% endfor %}
 </ul>
 EOT;

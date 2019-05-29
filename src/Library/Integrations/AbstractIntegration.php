@@ -4,7 +4,7 @@
  *
  * @package       Solspace:Freeform
  * @author        Solspace, Inc.
- * @copyright     Copyright (c) 2008-2018, Solspace, Inc.
+ * @copyright     Copyright (c) 2008-2019, Solspace, Inc.
  * @link          https://solspace.com/craft/freeform
  * @license       https://solspace.com/software/license-agreement
  */
@@ -240,7 +240,7 @@ abstract class AbstractIntegration implements IntegrationInterface
         if ($fieldObject->getType() === FieldObject::TYPE_ARRAY) {
             $value = $field->getValue();
         } else {
-            $value = $field->getValueAsString();
+            $value = $field->getValueAsString(false);
         }
 
         switch ($fieldObject->getType()) {
@@ -254,7 +254,7 @@ abstract class AbstractIntegration implements IntegrationInterface
                 if ($field instanceof DatetimeField) {
                     $carbon = $field->getCarbon();
                     if ($carbon) {
-                        return $carbon->toAtomString();
+                        return $carbon->toDateString();
                     }
                 }
 

@@ -4,7 +4,7 @@
  *
  * @package       Solspace:Freeform
  * @author        Solspace, Inc.
- * @copyright     Copyright (c) 2008-2017, Solspace, Inc.
+ * @copyright     Copyright (c) 2008-2019, Solspace, Inc.
  * @link          https://solspace.com/craft/freeform
  * @license       https://solspace.com/software/license-agreement
  */
@@ -22,6 +22,7 @@ use Solspace\Freeform\Events\Forms\DeleteEvent;
 use Solspace\Freeform\Events\Forms\FormRenderEvent;
 use Solspace\Freeform\Events\Forms\FormValidateEvent;
 use Solspace\Freeform\Events\Forms\PageJumpEvent;
+use Solspace\Freeform\Events\Forms\ReturnUrlEvent;
 use Solspace\Freeform\Events\Forms\SaveEvent;
 use Solspace\Freeform\Freeform;
 use Solspace\Freeform\Library\Composer\Components\Fields\SubmitField;
@@ -542,6 +543,17 @@ class FormsService extends BaseService implements FormHandlerInterface
     {
         $event = new FormValidateEvent($form);
         $this->trigger(self::EVENT_FORM_VALIDATE, $event);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function onAfterGenerateReturnUrl(Form $form, Submission $submission = null, string $returnUrl = null)
+    {
+        $event = new ReturnUrlEvent($form, $submission, $returnUrl);
+        $this->trigger(self::EVENT_AFTER_GENERATE_RETURN_URL, $event);
+
+        return $event->getReturnUrl();
     }
 
     /**

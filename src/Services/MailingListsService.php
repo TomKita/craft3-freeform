@@ -4,7 +4,7 @@
  *
  * @package       Solspace:Freeform
  * @author        Solspace, Inc.
- * @copyright     Copyright (c) 2008-2017, Solspace, Inc.
+ * @copyright     Copyright (c) 2008-2019, Solspace, Inc.
  * @link          https://solspace.com/craft/freeform
  * @license       https://solspace.com/software/license-agreement
  */
@@ -339,7 +339,6 @@ class MailingListsService extends AbstractIntegrationService implements MailingL
                     ->createCommand()
                     ->delete(
                         MailingListFieldRecord::TABLE,
-                        'mailingListId = :mailingListId AND handle = :handle',
                         [
                             'mailingListId' => $mailingListId,
                             'handle'        => $handle,
@@ -373,7 +372,6 @@ class MailingListsService extends AbstractIntegrationService implements MailingL
                                 'type'     => $field->getType(),
                                 'required' => $field->isRequired() ? 1 : 0,
                             ],
-                            'mailingListId = :mailingListId AND handle = :handle',
                             [
                                 'mailingListId' => $mailingListId,
                                 'handle'        => $field->getHandle(),

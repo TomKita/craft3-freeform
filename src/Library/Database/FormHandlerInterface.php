@@ -4,7 +4,7 @@
  *
  * @package       Solspace:Freeform
  * @author        Solspace, Inc.
- * @copyright     Copyright (c) 2008-2018, Solspace, Inc.
+ * @copyright     Copyright (c) 2008-2019, Solspace, Inc.
  * @link          https://solspace.com/craft/freeform
  * @license       https://solspace.com/software/license-agreement
  */
@@ -16,17 +16,18 @@ use Solspace\Freeform\Library\Composer\Components\Form;
 
 interface FormHandlerInterface
 {
-    const EVENT_BEFORE_SUBMIT          = 'beforeSubmit';
-    const EVENT_AFTER_SUBMIT           = 'afterSubmit';
-    const EVENT_PAGE_JUMP              = 'pageJump';
-    const EVENT_BEFORE_SAVE            = 'beforeSave';
-    const EVENT_AFTER_SAVE             = 'afterSave';
-    const EVENT_BEFORE_DELETE          = 'beforeDelete';
-    const EVENT_AFTER_DELETE           = 'afterDelete';
-    const EVENT_RENDER_OPENING_TAG     = 'renderOpeningTag';
-    const EVENT_RENDER_CLOSING_TAG     = 'renderClosingTag';
-    const EVENT_FORM_VALIDATE          = 'validateForm';
-    const EVENT_ATTACH_FORM_ATTRIBUTES = 'attachFormAttributes';
+    const EVENT_BEFORE_SUBMIT             = 'beforeSubmit';
+    const EVENT_AFTER_SUBMIT              = 'afterSubmit';
+    const EVENT_PAGE_JUMP                 = 'pageJump';
+    const EVENT_BEFORE_SAVE               = 'beforeSave';
+    const EVENT_AFTER_SAVE                = 'afterSave';
+    const EVENT_BEFORE_DELETE             = 'beforeDelete';
+    const EVENT_AFTER_DELETE              = 'afterDelete';
+    const EVENT_RENDER_OPENING_TAG        = 'renderOpeningTag';
+    const EVENT_RENDER_CLOSING_TAG        = 'renderClosingTag';
+    const EVENT_FORM_VALIDATE             = 'validateForm';
+    const EVENT_ATTACH_FORM_ATTRIBUTES    = 'attachFormAttributes';
+    const EVENT_AFTER_GENERATE_RETURN_URL = 'afterGenerateReturnUrl';
 
     /**
      * @param Form   $form
@@ -119,4 +120,13 @@ interface FormHandlerInterface
      * @param Form $form
      */
     public function onFormValidate(Form $form);
+
+    /**
+     * @param Form       $form
+     * @param Submission $submission
+     * @param string     $returnUrl
+     *
+     * @return string|null
+     */
+    public function onAfterGenerateReturnUrl(Form $form, Submission $submission = null, string $returnUrl = null);
 }

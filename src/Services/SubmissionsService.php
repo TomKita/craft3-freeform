@@ -4,7 +4,7 @@
  *
  * @package       Solspace:Freeform
  * @author        Solspace, Inc.
- * @copyright     Copyright (c) 2008-2017, Solspace, Inc.
+ * @copyright     Copyright (c) 2008-2019, Solspace, Inc.
  * @link          https://solspace.com/craft/freeform
  * @license       https://solspace.com/software/license-agreement
  */
@@ -12,6 +12,7 @@
 namespace Solspace\Freeform\Services;
 
 use craft\db\Query;
+use craft\db\Table;
 use craft\records\Element;
 use Solspace\Commons\Helpers\PermissionHelper;
 use Solspace\Freeform\Elements\SpamSubmission;
@@ -26,7 +27,6 @@ use Solspace\Freeform\Library\Composer\Components\Fields\Interfaces\StaticValueI
 use Solspace\Freeform\Library\Composer\Components\Form;
 use Solspace\Freeform\Library\Database\SubmissionHandlerInterface;
 use Solspace\Freeform\Records\UnfinalizedFileRecord;
-use yii\base\Component;
 
 class SubmissionsService extends BaseService implements SubmissionHandlerInterface
 {
@@ -69,17 +69,27 @@ class SubmissionsService extends BaseService implements SubmissionHandlerInterfa
      */
     public function getSubmissionCount(array $formIds = null, array $statusIds = null, bool $isSpam = false): int
     {
-        return (int) (new Query())
-            ->select(['COUNT(id)'])
-            ->from(Submission::TABLE)
+        $submissions = Submission::TABLE;
+        $query       = (new Query())
+            ->select(["COUNT($submissions.[[id]])"])
+            ->from($submissions)
             ->filterWhere(
                 [
-                    'formId'   => $formIds,
-                    'statusId' => $statusIds,
-                    'isSpam'   => $isSpam,
+                    "$submissions.[[formId]]"   => $formIds,
+                    "$submissions.[[statusId]]" => $statusIds,
+                    "$submissions.[[isSpam]]"   => $isSpam,
                 ]
-            )
-            ->scalar();
+            );
+
+        if (version_compare(\Craft::$app->getVersion(), '3.1', '>=')) {
+            $elements = Table::ELEMENTS;
+            $query->innerJoin(
+                $elements,
+                "$elements.[[id]] = $submissions.[[id]] AND $elements.[[dateDeleted]] IS NULL"
+            );
+        }
+
+        return (int) $query->scalar();
     }
 
     /**
@@ -91,12 +101,22 @@ class SubmissionsService extends BaseService implements SubmissionHandlerInterfa
      */
     public function getSubmissionCountByForm(bool $isSpam = false): array
     {
-        $countList = (new Query())
-            ->select(['[[formId]]', 'COUNT([[id]]) as [[submissionCount]]'])
-            ->from(Submission::TABLE)
+        $submissions = Submission::TABLE;
+        $query       = (new Query())
+            ->select(["$submissions.[[formId]]", "COUNT($submissions.[[id]]) as [[submissionCount]]"])
+            ->from($submissions)
             ->filterWhere(['isSpam' => $isSpam])
-            ->groupBy('[[formId]]')
-            ->all();
+            ->groupBy("$submissions.[[formId]]");
+
+        if (version_compare(\Craft::$app->getVersion(), '3.1', '>=')) {
+            $elements = Element::tableName();
+            $query->innerJoin(
+                $elements,
+                "$elements.[[id]] = $submissions.[[id]] AND $elements.[[dateDeleted]] IS NULL"
+            );
+        }
+
+        $countList = $query->all();
 
         $submissionCountByForm = [];
         foreach ($countList as $data) {
@@ -227,7 +247,6 @@ class SubmissionsService extends BaseService implements SubmissionHandlerInterfa
         }
 
 
-
         $formsService->onAfterSubmit($form, $submission);
     }
 
@@ -343,7 +362,10 @@ class SubmissionsService extends BaseService implements SubmissionHandlerInterfa
      */
     public function markFormAsSubmitted(Form $form)
     {
-        \Craft::$app->session->setFlash(Form::SUBMISSION_FLASH_KEY . $form->getId());
+        \Craft::$app->session->setFlash(
+            Form::SUBMISSION_FLASH_KEY . $form->getId(),
+            Freeform::t('Form submitted successfully')
+        );
     }
 
     /**
